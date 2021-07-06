@@ -105,7 +105,7 @@ class MainPageStateWidget extends StatelessWidget {
         return Center(
           child: Text(
             state.toString(),
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: SuperheroesColors.white),
           ),
         );
       },
@@ -141,15 +141,18 @@ class NoFavoritesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        InfoWithButton(
-          title: 'No favorites yet',
-          subtitle: 'Search and add',
-          imageTopPadding: 174,
-          imageWidth: 108,
-          imageHeight: 119,
-          assetImage: SuperheroesImages.ironManImage,
-          buttonText: 'Search',
+        Center(
+          child: InfoWithButton(
+            title: 'No favorites yet',
+            subtitle: 'Search and add',
+            imageTopPadding: 174,
+            imageWidth: 108,
+            imageHeight: 119,
+            assetImage: SuperheroesImages.ironManImage,
+            buttonText: 'Search',
+          ),
         ),
       ],
     );
@@ -170,7 +173,7 @@ class MinSymbolsWidget extends StatelessWidget {
         child: Text(
           "Enter at least 3 symbols",
           style: TextStyle(
-            color: SuperheroesColors.write,
+            color: SuperheroesColors.white,
             fontWeight: FontWeight.w600,
             fontSize: 20,
           ),
@@ -189,14 +192,16 @@ class NothingFoundWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        InfoWithButton(
-          title: 'Nothing found',
-          subtitle: 'Search for something else',
-          imageTopPadding: 180,
-          imageWidth: 84,
-          imageHeight: 112,
-          assetImage: SuperheroesImages.hulkImage,
-          buttonText: 'Search',
+        Center(
+          child: InfoWithButton(
+            title: 'Nothing found',
+            subtitle: 'Search for something else',
+            imageTopPadding: 180,
+            imageWidth: 84,
+            imageHeight: 112,
+            assetImage: SuperheroesImages.hulkImage,
+            buttonText: 'Search',
+          ),
         ),
       ],
     );
@@ -212,14 +217,16 @@ class LoadingErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        InfoWithButton(
-          title: 'Error happened',
-          subtitle: 'Please, try again',
-          imageTopPadding: 186,
-          imageWidth: 126,
-          imageHeight: 106,
-          assetImage: SuperheroesImages.supermanImage,
-          buttonText: 'Retry',
+        Center(
+          child: InfoWithButton(
+            title: 'Error happened',
+            subtitle: 'Please, try again',
+            imageTopPadding: 186,
+            imageWidth: 126,
+            imageHeight: 106,
+            assetImage: SuperheroesImages.supermanImage,
+            buttonText: 'Retry',
+          ),
         ),
       ],
     );
@@ -243,7 +250,7 @@ class FavoritesWidget extends StatelessWidget {
             child: Text(
               "Your favorites",
               style: TextStyle(
-                color: SuperheroesColors.write,
+                color: SuperheroesColors.white,
                 fontWeight: FontWeight.w800,
                 fontSize: 24,
               ),
@@ -294,7 +301,7 @@ class SearchResultWidget extends StatelessWidget {
             child: Text(
               "Search results",
               style: TextStyle(
-                color: SuperheroesColors.write,
+                color: SuperheroesColors.white,
                 fontWeight: FontWeight.w800,
                 fontSize: 24,
               ),
@@ -305,7 +312,7 @@ class SearchResultWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SuperheroCard(
-            name: "Bat Man",
+            name: "Batman",
             realName: "Bruce Wayne",
             imageUrl:
                 'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',

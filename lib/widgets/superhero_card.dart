@@ -39,7 +39,7 @@ class SuperheroCard extends StatelessWidget {
                   Text(
                     name.toUpperCase(),
                     style: TextStyle(
-                      color: SuperheroesColors.write,
+                      color: SuperheroesColors.white,
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
@@ -47,7 +47,7 @@ class SuperheroCard extends StatelessWidget {
                   Text(
                     realName.toUpperCase(),
                     style: TextStyle(
-                      color: SuperheroesColors.write,
+                      color: SuperheroesColors.white,
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
                     ),

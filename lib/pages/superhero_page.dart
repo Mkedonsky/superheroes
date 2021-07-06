@@ -12,7 +12,6 @@ class SuperheroPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor: SuperheroesColors.background,
       body: SafeArea(
         child: Stack(
@@ -21,7 +20,7 @@ class SuperheroPage extends StatelessWidget {
               child: Text(
                 name,
                 style: TextStyle(
-                  color: SuperheroesColors.write,
+                  color: SuperheroesColors.white,
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
                 ),
