@@ -28,14 +28,13 @@ class SuperheroCard extends StatelessWidget {
         color: SuperheroesColors.backgroundSuperheroesCard,
         child: Row(
           children: [
-            Image.network(imageUrl, width: 70, height: 70, fit: BoxFit.fill),
+            Image.network(imageUrl, width: 70, height: 70, fit: BoxFit.cover),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 14),
                   Text(
                     name.toUpperCase(),
                     style: TextStyle(
@@ -52,7 +51,6 @@ class SuperheroCard extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
-                  const SizedBox(width: 15),
                 ],
               ),
             ),

@@ -140,21 +140,19 @@ class NoFavoritesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Center(
-          child: InfoWithButton(
-            title: 'No favorites yet',
-            subtitle: 'Search and add',
-            imageTopPadding: 174,
-            imageWidth: 108,
-            imageHeight: 119,
-            assetImage: SuperheroesImages.ironManImage,
-            buttonText: 'Search',
-          ),
+    return Align(
+      alignment: Alignment.center,
+      child:
+        InfoWithButton(
+          title: 'No favorites yet',
+          subtitle: 'Search and add',
+          imageTopPadding: 9,
+          imageWidth: 108,
+          imageHeight: 119,
+          assetImage: SuperheroesImages.ironManImage,
+          buttonText: 'Search',
         ),
-      ],
+
     );
   }
 }
@@ -190,20 +188,17 @@ class NothingFoundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Center(
-          child: InfoWithButton(
-            title: 'Nothing found',
-            subtitle: 'Search for something else',
-            imageTopPadding: 180,
-            imageWidth: 84,
-            imageHeight: 112,
-            assetImage: SuperheroesImages.hulkImage,
-            buttonText: 'Search',
-          ),
-        ),
-      ],
+    return Align(
+      alignment: Alignment.center,
+      child: InfoWithButton(
+        title: 'Nothing found',
+        subtitle: 'Search for something else',
+        imageTopPadding: 16,
+        imageWidth: 84,
+        imageHeight: 112,
+        assetImage: SuperheroesImages.hulkImage,
+        buttonText: 'Search',
+      ),
     );
   }
 }
@@ -215,20 +210,17 @@ class LoadingErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Center(
-          child: InfoWithButton(
-            title: 'Error happened',
-            subtitle: 'Please, try again',
-            imageTopPadding: 186,
-            imageWidth: 126,
-            imageHeight: 106,
-            assetImage: SuperheroesImages.supermanImage,
-            buttonText: 'Retry',
-          ),
-        ),
-      ],
+    return Align(
+      alignment: Alignment.center,
+      child: InfoWithButton(
+        title: 'Error happened',
+        subtitle: 'Please, try again',
+        imageTopPadding: 22,
+        imageWidth: 126,
+        imageHeight: 106,
+        assetImage: SuperheroesImages.supermanImage,
+        buttonText: 'Retry',
+      ),
     );
   }
 }
