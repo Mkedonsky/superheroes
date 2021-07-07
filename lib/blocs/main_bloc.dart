@@ -4,7 +4,6 @@ import 'package:rxdart/subjects.dart';
 
 class MainBloc {
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
-
   Stream<MainPageState> observeMainPageState() => stateSubject;
 
   MainBloc() {
