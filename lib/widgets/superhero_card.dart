@@ -61,11 +61,11 @@ class SuperheroCard extends StatelessWidget {
   }
 }
 
-_superheroesPageInfo(context, name) {
+_superheroesPageInfo(context, _name) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) => SuperheroPage(
-        name: name,
+        name: _name,
       ),
     ),
   );
