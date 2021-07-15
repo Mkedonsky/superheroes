@@ -1,6 +1,8 @@
 import 'dart:async';
 
-import 'package:rxdart/subjects.dart';
+import 'package:rxdart/rxdart.dart';
+
+
 
 class MainBloc {
   final minSymbols = 3;
@@ -17,8 +19,7 @@ class MainBloc {
   MainBloc() {
     stateSubject.add(MainPageState.noFavorites);
 
-    textSubscription = currentTextSubject.distinct()
-        .listen((value) {
+    textSubscription = currentTextSubject.distinct().debounceTime(Duration(milliseconds: 200)).listen((value) {
       print("CHANGED: $value");
       searchSubscription?.cancel();
       if (value.isEmpty) {
