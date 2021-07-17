@@ -15,6 +15,7 @@ class MainBloc {
 
   StreamSubscription? textSubscription;
   StreamSubscription? searchSubscription;
+  StreamSubscription? removeFavoriteSubscription;
 
   MainBloc() {
     stateSubject.add(MainPageState.noFavorites);
@@ -46,6 +47,8 @@ class MainBloc {
     });
   }
 
+
+
   Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
       favoriteSuperheroesSubject;
 
@@ -54,7 +57,32 @@ class MainBloc {
 
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
-    return SuperheroInfo.mocked;
+    final batman = SuperheroInfo(
+      name: "Batman",
+      realName:"Bruce Wayne",
+      imageUrl:
+      'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
+    );
+    final ironman = SuperheroInfo(
+    name: "Ironman",
+    realName: "Tony Stark",
+    imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
+    );
+    final venom = SuperheroInfo(
+      name: "Venom",
+      realName: "Eddie Brock",
+      imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
+    );
+
+    if (text == "MAN" || text == "man"|| text == "MaN"|| text == "Man") {
+      return [ironman,batman];
+    } else if( text == "BAT" || text == "Bat"|| text=="bat") {
+      return [batman];
+    }else if( text == "VEN" || text == "Ven"|| text=="ven") {
+      return [venom];
+    }
+    return [];
+    // return SuperheroInfo.mocked;
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
@@ -120,8 +148,8 @@ class SuperheroInfo {
 
   static const mocked = [
     SuperheroInfo(
-      name: "Bat Man",
-      realName: "Bruce Wayne",
+      name: "Batman",
+      realName:"Bruce Wayne",
       imageUrl:
           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
     ),

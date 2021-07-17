@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
+import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
@@ -91,7 +92,8 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      keyboardType: TextInputType.text,
+      cursorColor:Colors.white ,
+      textCapitalization: TextCapitalization.words,
       textInputAction:TextInputAction.search ,
       controller: controller,
       style: TextStyle(
@@ -113,7 +115,11 @@ class _SearchWidgetState extends State<SearchWidget> {
         ),
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.white24)),
+            borderSide: BorderSide(color:Colors.white24)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.white, width: 2)
+        ),
       ),
     );
   }
@@ -283,6 +289,7 @@ class SuperheroesList extends StatelessWidget {
     Key? key,
     required this.title,
     required this.stream,
+
   }) : super(key: key);
 
   @override
@@ -311,14 +318,12 @@ class SuperheroesList extends StatelessWidget {
                   ),
                 );
               }
-              final SuperheroInfo item = superheroes[index - 1];
+              final SuperheroInfo item = superheroes[index-1];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SuperheroCard(
-                  name: item.name,
-                  realName: item.realName,
-                  imageUrl: item.imageUrl,
                   onTap: () {},
+                  superheroInfo:item,
                 ),
               );
             }, separatorBuilder: (BuildContext context, int index) {
