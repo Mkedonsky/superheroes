@@ -46,6 +46,16 @@ class MainBloc {
       stateSubject.add(MainPageState.loadingError);
     });
   }
+  void removeFavorite(){
+
+    removeFavoriteSubscription = favoriteSuperheroesSubject.listen((value) {
+      if (value.isNotEmpty) {
+        
+
+      }
+    });
+
+  }
 
 
 
