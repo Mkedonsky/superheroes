@@ -2,14 +2,11 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-
-
 class MainBloc {
   final minSymbols = 3;
 
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
-  final favoriteSuperheroesSubject =
-      BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
+  final favoriteSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final searchSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
@@ -20,7 +17,10 @@ class MainBloc {
   MainBloc() {
     stateSubject.add(MainPageState.noFavorites);
 
-    textSubscription = currentTextSubject.distinct().debounceTime(Duration(milliseconds: 200)).listen((value) {
+    textSubscription = currentTextSubject
+        .distinct()
+        .debounceTime(Duration(milliseconds: 200))
+        .listen((value) {
       print("CHANGED: $value");
       searchSubscription?.cancel();
       if (value.isEmpty) {
@@ -46,18 +46,11 @@ class MainBloc {
       stateSubject.add(MainPageState.loadingError);
     });
   }
-  void removeFavorite(){
 
-    removeFavoriteSubscription = favoriteSuperheroesSubject.listen((value) {
-      if (value.isNotEmpty) {
-        
-
-      }
-    });
-
-  }
-
-
+  // void removeFavorite(){
+  //
+  //
+  // }
 
   Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
       favoriteSuperheroesSubject;
@@ -67,32 +60,9 @@ class MainBloc {
 
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
-    final batman = SuperheroInfo(
-      name: "Batman",
-      realName:"Bruce Wayne",
-      imageUrl:
-      'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
-    );
-    final ironman = SuperheroInfo(
-    name: "Ironman",
-    realName: "Tony Stark",
-    imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/85.jpg',
-    );
-    final venom = SuperheroInfo(
-      name: "Venom",
-      realName: "Eddie Brock",
-      imageUrl: 'https://www.superherodb.com/pictures2/portraits/10/100/22.jpg',
-    );
-
-    if (text == "MAN" || text == "man"|| text == "MaN"|| text == "Man") {
-      return [ironman,batman];
-    } else if( text == "BAT" || text == "Bat"|| text=="bat") {
-      return [batman];
-    }else if( text == "VEN" || text == "Ven"|| text=="ven") {
-      return [venom];
-    }
-    return [];
-    // return SuperheroInfo.mocked;
+    Iterable<SuperheroInfo> heroes = SuperheroInfo.mocked;
+      heroes = heroes.where((element) => element.name.contains(text));
+    return heroes.toList();
   }
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
@@ -157,9 +127,9 @@ class SuperheroInfo {
   int get hashCode => name.hashCode ^ realName.hashCode ^ imageUrl.hashCode;
 
   static const mocked = [
-     SuperheroInfo(
+    SuperheroInfo(
       name: "Batman",
-      realName:"Bruce Wayne",
+      realName: "Bruce Wayne",
       imageUrl:
           'https://www.superherodb.com/pictures2/portraits/10/100/639.jpg',
     ),

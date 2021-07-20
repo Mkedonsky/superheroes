@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
-import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 
@@ -98,6 +97,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       textCapitalization: TextCapitalization.words,
       textInputAction:TextInputAction.search ,
       controller: controller,
+
       style: TextStyle(
         fontWeight: FontWeight.w400,
         fontSize: 20,
@@ -320,7 +320,7 @@ class SuperheroesList extends StatelessWidget {
                   ),
                 );
               }
-              final SuperheroInfo item = superheroes[index-1];
+              final SuperheroInfo item = superheroes[index -1];
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SuperheroCard(
