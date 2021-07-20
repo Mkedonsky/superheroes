@@ -157,7 +157,7 @@ class SuperheroInfo {
   int get hashCode => name.hashCode ^ realName.hashCode ^ imageUrl.hashCode;
 
   static const mocked = [
-    SuperheroInfo(
+     SuperheroInfo(
       name: "Batman",
       realName:"Bruce Wayne",
       imageUrl:
