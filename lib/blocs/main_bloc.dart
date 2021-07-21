@@ -61,7 +61,9 @@ class MainBloc {
   Future<List<SuperheroInfo>> search(final String text) async {
     await Future.delayed(Duration(seconds: 1));
     Iterable<SuperheroInfo> heroes = SuperheroInfo.mocked;
-      heroes = heroes.where((element) => element.name.contains(text));
+    heroes = heroes.where(
+      (element) => element.name.contains(text),
+    );
     return heroes.toList();
   }
 
