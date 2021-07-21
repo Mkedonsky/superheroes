@@ -6,7 +6,8 @@ class MainBloc {
   final minSymbols = 3;
 
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
-  final favoriteSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
+  final favoriteSuperheroesSubject =
+      BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
   final searchSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
@@ -47,10 +48,15 @@ class MainBloc {
     });
   }
 
-  // void removeFavorite(){
-  //
-  //
-  // }
+  void removeFavorite() {
+    var favorites = SuperheroInfo.mocked;
+    if (favoriteSuperheroesSubject != null) {
+      favorites = favorites.removeLast() as List<SuperheroInfo>;
+      favoriteSuperheroesSubject.add(favorites);
+    } else {
+      favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
+    }
+  }
 
   Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
       favoriteSuperheroesSubject;
@@ -62,7 +68,7 @@ class MainBloc {
     await Future.delayed(Duration(seconds: 1));
     Iterable<SuperheroInfo> heroes = SuperheroInfo.mocked;
     heroes = heroes.where(
-      (element) => element.name.contains(text),
+      (element) => element.name.toUpperCase().contains(text.toUpperCase()),
     );
     return heroes.toList();
   }

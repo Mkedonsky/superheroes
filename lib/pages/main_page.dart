@@ -57,8 +57,6 @@ class _MainPageState extends State<MainPage> {
 class MainPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-
     return Stack(
       children: [
         MainPageStateWidget(),
@@ -118,7 +116,6 @@ class _SearchWidgetState extends State<SearchWidget> {
         disabledBorder:OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.white24,width: 1 )),
-
         enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(color: Colors.white24,width: 1 )),
