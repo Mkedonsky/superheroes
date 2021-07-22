@@ -13,7 +13,7 @@ class MainBloc {
 
   StreamSubscription? textSubscription;
   StreamSubscription? searchSubscription;
-  StreamSubscription? removeFavoriteSubscription;
+  StreamSubscription? favoriteSubscription;
 
   MainBloc() {
     stateSubject.add(MainPageState.noFavorites);
@@ -32,11 +32,15 @@ class MainBloc {
         searchForSuperheroes(value);
       }
     });
+    // favoriteSubscription = favoriteSuperheroesSubject.listen((value) {
+    // removeFavorite();});
+
   }
 
   void searchForSuperheroes(final String text) {
     stateSubject.add(MainPageState.loading);
     searchSubscription = search(text).asStream().listen((searchResult) {
+
       if (searchResult.isEmpty) {
         stateSubject.add(MainPageState.nothingFound);
       } else {
@@ -49,13 +53,13 @@ class MainBloc {
   }
 
   void removeFavorite() {
-    var favorites = SuperheroInfo.mocked;
-    if (favoriteSuperheroesSubject != null) {
-      favorites = favorites.removeLast() as List<SuperheroInfo>;
-      favoriteSuperheroesSubject.add(favorites);
-    } else {
+    print("Кнопка нажата remove");
+    Iterable<SuperheroInfo>? favorites = favoriteSuperheroesSubject.value;
+    if (favoriteSuperheroesSubject.value.isEmpty) {
       favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
-    }
+    }else{
+    favorites = favorites.take(favorites.length -1);
+    favoriteSuperheroesSubject.add(favorites.toList());}
   }
 
   Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
