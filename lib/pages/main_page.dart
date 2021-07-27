@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
@@ -8,9 +9,12 @@ import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
+import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
-  MainPage({Key? key}) : super(key: key);
+  final http.Client? client;
+
+  MainPage({Key? key, this.client}) : super(key: key);
 
   @override
   _MainPageState createState() => _MainPageState();
@@ -33,7 +37,13 @@ class MainPage extends StatefulWidget {
 // }
 
 class _MainPageState extends State<MainPage> {
-  final MainBloc bloc = MainBloc();
+  late final MainBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = MainBloc(client: widget.client);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,15 +68,9 @@ class _MainPageState extends State<MainPage> {
 class MainPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return Stack(
       children: [
         MainPageStateWidget(),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child:
-              ActionButton(text: "Remove", onTap: () {bloc.removeFavorite();}),
-        ),
         Padding(
           padding: const EdgeInsets.only(right: 16, left: 16, top: 12),
           child: SearchWidget(),
@@ -83,13 +87,22 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   final TextEditingController controller = TextEditingController();
+  bool haveSearchText = false;
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance?.addPostFrameCallback((timeStamp) {
       final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
-      controller.addListener(() => bloc.updateText(controller.text));
+      controller.addListener(() {
+        bloc.updateText(controller.text);
+        final haveText = controller.text.isNotEmpty;
+        if (haveSearchText != haveText) {
+          setState(() {
+            haveSearchText = haveText;
+          });
+        }
+      });
     });
   }
 
@@ -117,12 +130,11 @@ class _SearchWidgetState extends State<SearchWidget> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.white24, width: 1)),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.white24),
+          borderSide: haveSearchText
+              ? BorderSide(color: Colors.white, width: 2)
+              : BorderSide(color: Colors.white24),
         ),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -148,7 +160,16 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.loading:
             return LoadingIndicator();
           case MainPageState.noFavorites:
-            return NoFavoritesWidget();
+            return Stack(
+              children: [
+                NoFavoritesWidget(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
+                ),
+              ],
+            );
           case MainPageState.minSymbols:
             return MinSymbolsWidget();
           case MainPageState.nothingFound:
@@ -161,9 +182,18 @@ class MainPageStateWidget extends StatelessWidget {
               stream: bloc.observeSearchSuperheroes(),
             );
           case MainPageState.favorites:
-            return SuperheroesList(
-              title: "Your favorites",
-              stream: bloc.observeFavoritesSuperheroes(),
+            return Stack(
+              children: [
+                SuperheroesList(
+                  title: "Your favorites",
+                  stream: bloc.observeFavoritesSuperheroes(),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
+                ),
+              ],
             );
           default:
         }
@@ -291,7 +321,6 @@ class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
 
-
   const SuperheroesList({
     Key? key,
     required this.title,
@@ -300,7 +329,6 @@ class SuperheroesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
     return StreamBuilder<List<SuperheroInfo>>(
         stream: stream,
         builder: (context, snapshot) {
