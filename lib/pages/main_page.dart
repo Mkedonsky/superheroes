@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
@@ -243,7 +244,9 @@ class NoFavoritesWidget extends StatelessWidget {
         imageWidth: 108,
         imageHeight: 119,
         assetImage: SuperheroesImages.ironManImage,
-        buttonText: 'Search',
+        buttonText: 'Search', onTap: () {
+
+      },
       ),
     );
   }
@@ -289,7 +292,9 @@ class NothingFoundWidget extends StatelessWidget {
         imageWidth: 84,
         imageHeight: 112,
         assetImage: SuperheroesImages.hulkImage,
-        buttonText: 'Search',
+        buttonText: 'Search', onTap: () {
+          print('Search'" нажата");
+      },
       ),
     );
   }
@@ -311,7 +316,7 @@ class LoadingErrorWidget extends StatelessWidget {
         imageWidth: 126,
         imageHeight: 106,
         assetImage: SuperheroesImages.supermanImage,
-        buttonText: 'Retry',
+        buttonText: 'Retry', onTap: () {  },
       ),
     );
   }

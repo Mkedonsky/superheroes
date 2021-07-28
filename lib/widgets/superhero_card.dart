@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
+import 'package:superheroes/resources/superheroes_images.dart';
 
 class SuperheroCard extends StatelessWidget {
   final VoidCallback onTap;
@@ -26,11 +27,32 @@ class SuperheroCard extends StatelessWidget {
         color: SuperheroesColors.backgroundSuperheroesCard,
         child: Row(
           children: [
-            CachedNetworkImage(
-              imageUrl: superheroInfo.imageUrl,
+            Container(
+              color: Colors.white24,
               width: 70,
               height: 70,
-              fit: BoxFit.cover,
+              child: CachedNetworkImage(
+                progressIndicatorBuilder: (context, url, progress) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      value: progress.progress,
+                      color: Color(0xFF00BCD4),
+                    ),
+                  );
+
+                },
+                errorWidget: (context, url, error) => Center(
+                  child: Image.asset(
+                    SuperheroesImages.unknownImage,
+                    width: 20,
+                    height: 62,
+                  ),
+                ),
+                imageUrl: superheroInfo.imageUrl,
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -72,4 +94,5 @@ _superheroesPageInfo(context, _name) {
       ),
     ),
   );
+
 }
