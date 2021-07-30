@@ -80,21 +80,20 @@ class MainBloc {
       }).toList();
       return found;
     } else if (decoded['response'] == 'error') {
-      if (response.statusCode == 200 && decoded['error'] != "character with given name not found") {
-        throw ApiException("character with given name not found");
-      } if (response.statusCode >= 400&& response.statusCode <=499){
+      if (response.statusCode == 200 &&
+          decoded['error'] != "character with given name not found") {
         throw ApiException("Client error happened");
-      } if(response.statusCode >= 500 && response.statusCode <=599){
+      }
+      if (response.statusCode >= 400 && response.statusCode <= 499) {
+        throw ApiException("Client error happened");
+      }
+      if (response.statusCode >= 500 && response.statusCode <= 599) {
         throw ApiException("Server error happened");
       }
       return [];
-
     }
-    throw Exception("Unknown error happened");
+    throw ApiException("Unknown error happened");
   }
-
-
-
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
 
@@ -104,8 +103,8 @@ class MainBloc {
     if (favorites.isEmpty) {
       favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
     } else {
-      favoriteSuperheroesSubject.add(favorites.take(favorites.length - 1).toList());
-
+      favoriteSuperheroesSubject
+          .add(favorites.take(favorites.length - 1).toList());
     }
   }
 
