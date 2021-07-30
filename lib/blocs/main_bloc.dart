@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
@@ -80,17 +79,19 @@ class MainBloc {
       }).toList();
       return found;
     } else if (decoded['response'] == 'error') {
-      if (response.statusCode == 200 &&
-          decoded['error'] != "character with given name not found") {
-        throw ApiException("Client error happened");
+      if (decoded['error'] == "character with given name not found") {
+        return [];
       }
-      if (response.statusCode >= 400 && response.statusCode <= 499) {
-        throw ApiException("Client error happened");
-      }
-      if (response.statusCode >= 500 && response.statusCode <= 599) {
-        throw ApiException("Server error happened");
-      }
-      return [];
+
+    }if ( response.statusCode == 200 &&
+        decoded['error'] != "character with given name not found") {
+      throw ApiException("Client error happened");
+    }
+    if (response.statusCode >= 400 && response.statusCode <= 499) {
+      throw ApiException("Client error happened");
+    }
+    if (response.statusCode >= 500 && response.statusCode <= 599) {
+      throw ApiException("Server error happened");
     }
     throw ApiException("Unknown error happened");
   }
