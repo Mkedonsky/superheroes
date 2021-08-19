@@ -52,6 +52,11 @@ class MainBloc {
     });
   }
 
+  void retry() {
+    final currentText = currentTextSubject.value;
+    searchForSuperheroes(currentText);
+  }
+
   Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
       favoriteSuperheroesSubject;
 
@@ -70,6 +75,13 @@ class MainBloc {
           .map((rawSuperhero) => Superhero.fromJson(rawSuperhero))
           .toList();
 
+      if (response.statusCode >= 400 && response.statusCode <= 499) {
+        throw ApiException("Client error happened");
+      }
+      if (response.statusCode >= 500 && response.statusCode <= 599) {
+        throw ApiException("Server error happened");
+      }
+
       final List<SuperheroInfo> found = superheroes.map((superhero) {
         return SuperheroInfo(
           name: superhero.name,
@@ -82,16 +94,7 @@ class MainBloc {
       if (decoded['error'] == "character with given name not found") {
         return [];
       }
-
-    }if ( response.statusCode == 200 &&
-        decoded['error'] != "character with given name not found") {
       throw ApiException("Client error happened");
-    }
-    if (response.statusCode >= 400 && response.statusCode <= 499) {
-      throw ApiException("Client error happened");
-    }
-    if (response.statusCode >= 500 && response.statusCode <= 599) {
-      throw ApiException("Server error happened");
     }
     throw ApiException("Unknown error happened");
   }

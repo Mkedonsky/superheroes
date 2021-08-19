@@ -24,6 +24,7 @@ class SuperheroCard extends StatelessWidget {
       },
       child: Container(
         height: 70,
+        width: 70,
         color: SuperheroesColors.backgroundSuperheroesCard,
         child: Row(
           children: [
@@ -33,19 +34,22 @@ class SuperheroCard extends StatelessWidget {
               height: 70,
               child: CachedNetworkImage(
                 progressIndicatorBuilder: (context, url, progress) {
-                  return Center(
+                  return Container(
+                    alignment: Alignment.center,
+                    height: 24,
+                    width: 24,
                     child: CircularProgressIndicator(
                       value: progress.progress,
-                      color: Color(0xFF00BCD4),
+                      color: SuperheroesColors.blue,
                     ),
                   );
-
                 },
                 errorWidget: (context, url, error) => Center(
                   child: Image.asset(
                     SuperheroesImages.unknownImage,
                     width: 20,
                     height: 62,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 imageUrl: superheroInfo.imageUrl,
@@ -94,5 +98,4 @@ _superheroesPageInfo(context, _name) {
       ),
     ),
   );
-
 }
