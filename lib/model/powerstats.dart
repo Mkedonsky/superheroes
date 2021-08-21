@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'powerstats.g.dart';
 
-@JsonSerializable(fieldRename: FieldRename.kebab,explicitToJson: true)
+@JsonSerializable()
 class Powerstats{String intelligence;
   final String strength;
   final String speed;
