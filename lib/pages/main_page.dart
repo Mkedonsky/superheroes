@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:superheroes/blocs/main_bloc.dart';
+import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
 import 'package:superheroes/widgets/action_button.dart';
@@ -21,21 +22,6 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-// class MainBlocHolder extends InheritedWidget {
-//   final MainBloc bloc;
-//
-//   MainBlocHolder({required this.bloc, required final Widget child})
-//       : super(child: child);
-//
-//   @override
-//   bool updateShouldNotify(MainBlocHolder oldWidget) => false;
-//
-//   static MainBlocHolder of(final BuildContext context) {
-//     final InheritedElement element =
-//         context.getElementForInheritedWidgetOfExactType<MainBlocHolder>()!;
-//     return element.widget as MainBlocHolder ;
-//   }
-// }
 
 class _MainPageState extends State<MainPage> {
   late final MainBloc bloc;
@@ -409,7 +395,11 @@ class SuperheroesList extends StatelessWidget {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SuperheroCard(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SuperheroPage(id: item.id),
+                    ));
+                  },
                   superheroInfo: item,
                 ),
               );

@@ -20,7 +20,7 @@ class SuperheroCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _superheroesPageInfo(context, superheroInfo.name);
+        _superheroesPageInfo(context, superheroInfo.id);
       },
       child: Container(
         height: 70,
@@ -90,11 +90,11 @@ class SuperheroCard extends StatelessWidget {
   }
 }
 
-_superheroesPageInfo(context, _name) {
+_superheroesPageInfo(context, id) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (context) => SuperheroPage(
-        name: _name,
+        id: id,
       ),
     ),
   );
