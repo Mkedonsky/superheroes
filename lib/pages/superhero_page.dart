@@ -123,7 +123,6 @@ class SuperheroAppBar extends StatelessWidget {
 }
 
 class FavoriteButton extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of<SuperheroBloc>(context, listen: false);
@@ -135,7 +134,7 @@ class FavoriteButton extends StatelessWidget {
             !snapshot.hasData || snapshot.data == null || snapshot.data!;
         return GestureDetector(
           onTap: () =>
-              favorite ? bloc.observeIsFavorite() : bloc.addToFavorites(),
+              favorite ? bloc.removeFromFavorites() : bloc.addToFavorite(),
           child: Container(
             height: 52,
             width: 52,

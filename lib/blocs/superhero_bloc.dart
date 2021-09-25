@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:superheroes/exception/api_exception.dart';
+import 'package:superheroes/favorite_superhero_storage.dart';
 import 'package:superheroes/model/superhero.dart';
 
 class SuperheroBloc {
@@ -12,20 +13,74 @@ class SuperheroBloc {
 
   final superheroSubject = BehaviorSubject<Superhero>();
 
+  StreamSubscription? getFromFavoritesSubscription;
   StreamSubscription? requestSubscription;
+  StreamSubscription? addToFavoriteSubscription;
+  StreamSubscription? removeFromFavoritesSubscription;
 
   SuperheroBloc({this.client, required this.id}) {
-    requestSuperhero();
+    getFromFavorites();
   }
 
-  void addToFavorites(){
+  void getFromFavorites(){
+    getFromFavoritesSubscription?.cancel();
+    getFromFavoritesSubscription = FavoriteSuperheroStorage.getInstance()
+        .getSuperhero(id)
+        .asStream()
+        .listen(
+          (superhero) {
+            if (superhero !=null) {
+              superheroSubject.add(superhero);
+            }
+            requestSuperhero();
+        print("Added to favorites $superhero");
+      },
+      onError: (error, stackTrace) =>
+          print("Error happened in addToFavorite: $error,$stackTrace "),
+    );
 
   }
 
-  void removeFromFavorite() {
+  void addToFavorite() {
+    final superhero = superheroSubject.valueOrNull;
+    if (superhero == null) {
+      print("Error: superhero = null");
+      return;
+    }
+    addToFavoriteSubscription?.cancel();
+    addToFavoriteSubscription = FavoriteSuperheroStorage.getInstance()
+        .addToFavorites(superhero)
+        .asStream()
+        .listen(
+      (event) {
+        print("Added to favorites $event");
+      },
+      onError: (error, stackTrace) =>
+          print("Error happened in addToFavorite: $error,$stackTrace "),
+    );
   }
 
-  Stream<bool> observeIsFavorite() => Stream.value(false);
+  void removeFromFavorites() {
+    final superhero = superheroSubject.valueOrNull;
+    if (superhero == null) {
+      print("Error: superhero = null");
+      return;
+    }
+    removeFromFavoritesSubscription?.cancel();
+    removeFromFavoritesSubscription = FavoriteSuperheroStorage.getInstance()
+        .removeFavorites(id)
+        .asStream()
+        .listen(
+      (event) {
+        print("Removed from favorites $event");
+      },
+      onError: (error, stackTrace) =>
+          print("Error happened in removeFromFavorites: $error,$stackTrace "),
+    );
+  }
+
+  Stream<bool> observeIsFavorite() =>
+      FavoriteSuperheroStorage.getInstance().observeIsFavorite(id);
 
   void requestSuperhero() {
     requestSubscription?.cancel();
@@ -64,5 +119,8 @@ class SuperheroBloc {
     client?.close();
     superheroSubject.close();
     requestSubscription?.cancel();
+    addToFavoriteSubscription?.cancel();
+    removeFromFavoritesSubscription?.cancel();
+    getFromFavoritesSubscription?.cancel();
   }
 }
