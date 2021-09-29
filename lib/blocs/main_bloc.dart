@@ -4,14 +4,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:http/http.dart' as http;
 import 'package:superheroes/exception/api_exception.dart';
+import 'package:superheroes/favorite_superhero_storage.dart';
 import 'package:superheroes/model/superhero.dart';
 
 class MainBloc {
   final minSymbols = 3;
 
   final BehaviorSubject<MainPageState> stateSubject = BehaviorSubject();
-  final favoriteSuperheroesSubject =
-      BehaviorSubject<List<SuperheroInfo>>.seeded(SuperheroInfo.mocked);
   final searchSuperheroesSubject = BehaviorSubject<List<SuperheroInfo>>();
   final currentTextSubject = BehaviorSubject<String>.seeded("");
 
@@ -23,11 +22,12 @@ class MainBloc {
   MainBloc({this.client}) {
     stateSubject.add(MainPageState.noFavorites);
     textSubscription =
-        Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+        Rx.combineLatest2<String, List<Superhero>, MainPageStateInfo>(
                 currentTextSubject
                     .distinct()
                     .debounceTime(Duration(milliseconds: 500)),
-                favoriteSuperheroesSubject,
+                FavoriteSuperheroesStorage.getInstance()
+                    .observeFavoriteSuperheroes(),
                 (searchedText, favorites) =>
                     MainPageStateInfo(searchedText, favorites.isNotEmpty))
             .listen((value) {
@@ -67,7 +67,11 @@ class MainBloc {
   }
 
   Stream<List<SuperheroInfo>> observeFavoritesSuperheroes() =>
-      favoriteSuperheroesSubject;
+      FavoriteSuperheroesStorage.getInstance().observeFavoriteSuperheroes().map(
+            (superheroes) => superheroes
+                .map((superhero) => SuperheroInfo.fromSuperhero(superhero))
+                .toList(),
+          );
 
   Stream<List<SuperheroInfo>> observeSearchSuperheroes() =>
       searchSuperheroesSubject;
@@ -92,12 +96,7 @@ class MainBloc {
       }
 
       final List<SuperheroInfo> found = superheroes.map((superhero) {
-        return SuperheroInfo(
-          id: superhero.id,
-          name: superhero.name,
-          realName: superhero.biography.fullName,
-          imageUrl: superhero.image.url,
-        );
+        return SuperheroInfo.fromSuperhero(superhero);
       }).toList();
       return found;
     } else if (decoded['response'] == 'error') {
@@ -111,16 +110,16 @@ class MainBloc {
 
   Stream<MainPageState> observeMainPageState() => stateSubject;
 
-  void removeFavorite() {
-    print("Кнопка нажата remove");
-    Iterable<SuperheroInfo>? favorites = favoriteSuperheroesSubject.value;
-    if (favorites.isEmpty) {
-      favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
-    } else {
-      favoriteSuperheroesSubject
-          .add(favorites.take(favorites.length - 1).toList());
-    }
-  }
+  // void removeFavorite() {
+  //   print("Кнопка нажата remove");
+  //   Iterable<SuperheroInfo>? favorites = favoriteSuperheroesSubject.value;
+  //   if (favorites. isEmpty) {
+  //     favoriteSuperheroesSubject.add(SuperheroInfo.mocked);
+  //   } else {
+  //     favoriteSuperheroesSubject
+  //         .add(favorites.take(favorites.length - 1).toList());
+  //   }
+  // }
 
   void nextState() {
     final currentState = stateSubject.value;
@@ -137,7 +136,7 @@ class MainBloc {
   void dispose() {
     stateSubject.close();
     searchSuperheroesSubject.close();
-    favoriteSuperheroesSubject.close();
+    textSubscription?.cancel();
     currentTextSubject.close();
     textSubscription?.cancel();
     client?.close();
@@ -189,6 +188,15 @@ class SuperheroInfo {
     required this.realName,
     required this.imageUrl,
   });
+
+  factory SuperheroInfo.fromSuperhero(final Superhero superhero) {
+    return SuperheroInfo(
+      id: superhero.id,
+      name: superhero.name,
+      realName: superhero.biography.fullName,
+      imageUrl: superhero.image.url,
+    );
+  }
 
   @override
   String toString() {

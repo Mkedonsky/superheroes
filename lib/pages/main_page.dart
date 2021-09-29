@@ -8,7 +8,6 @@ import 'package:superheroes/blocs/main_bloc.dart';
 import 'package:superheroes/pages/superhero_page.dart';
 import 'package:superheroes/resources/superheroes_colors.dart';
 import 'package:superheroes/resources/superheroes_images.dart';
-import 'package:superheroes/widgets/action_button.dart';
 import 'package:superheroes/widgets/info_with_button.dart';
 import 'package:superheroes/widgets/superhero_card.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +20,6 @@ class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
 }
-
 
 class _MainPageState extends State<MainPage> {
   late final MainBloc bloc;
@@ -185,18 +183,8 @@ class MainPageStateWidget extends StatelessWidget {
           case MainPageState.loading:
             return LoadingIndicator();
           case MainPageState.noFavorites:
-            return Stack(
-              children: [
-                NoFavoritesWidget(
-                  searchFieldFocusNode: searchFieldFocusNode,
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child:
-                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
-                ),
-              ],
-            );
+            return NoFavoritesWidget(
+                searchFieldFocusNode: searchFieldFocusNode);
           case MainPageState.minSymbols:
             return MinSymbolsWidget();
           case MainPageState.nothingFound:
@@ -211,18 +199,9 @@ class MainPageStateWidget extends StatelessWidget {
               stream: bloc.observeSearchSuperheroes(),
             );
           case MainPageState.favorites:
-            return Stack(
-              children: [
-                SuperheroesList(
-                  title: "Your favorites",
-                  stream: bloc.observeFavoritesSuperheroes(),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child:
-                      ActionButton(text: "Remove", onTap: bloc.removeFavorite),
-                ),
-              ],
+            return SuperheroesList(
+              title: "Your favorites",
+              stream: bloc.observeFavoritesSuperheroes(),
             );
           default:
         }
@@ -373,6 +352,7 @@ class SuperheroesList extends StatelessWidget {
             return const SizedBox.shrink();
           }
           final List<SuperheroInfo> superheroes = snapshot.data!;
+          print("GOT UPDATE SUPERHERO $superheroes");
           return ListView.separated(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemCount: superheroes.length + 1,

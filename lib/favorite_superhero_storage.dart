@@ -62,7 +62,7 @@ class FavoriteSuperheroesStorage {
     return null;
   }
 
-  Stream<List<Superhero>> observeFavoriteSuperhero() async* {
+  Stream<List<Superhero>> observeFavoriteSuperheroes() async* {
     yield await _getSuperheroes();
     await for (final _ in updater) {
       yield await _getSuperheroes();
@@ -70,7 +70,7 @@ class FavoriteSuperheroesStorage {
   }
 
   Stream<bool> observeIsFavorite(final String id) {
-    return observeFavoriteSuperhero().map((superheroes) =>
+    return observeFavoriteSuperheroes().map((superheroes) =>
         superheroes.any((superhero) => superhero.id == id));
   }
 }
