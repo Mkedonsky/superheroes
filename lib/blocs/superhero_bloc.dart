@@ -24,7 +24,7 @@ class SuperheroBloc {
 
   void getFromFavorites(){
     getFromFavoritesSubscription?.cancel();
-    getFromFavoritesSubscription = FavoriteSuperheroStorage.getInstance()
+    getFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance()
         .getSuperhero(id)
         .asStream()
         .listen(
@@ -48,7 +48,7 @@ class SuperheroBloc {
       return;
     }
     addToFavoriteSubscription?.cancel();
-    addToFavoriteSubscription = FavoriteSuperheroStorage.getInstance()
+    addToFavoriteSubscription = FavoriteSuperheroesStorage.getInstance()
         .addToFavorites(superhero)
         .asStream()
         .listen(
@@ -67,7 +67,7 @@ class SuperheroBloc {
       return;
     }
     removeFromFavoritesSubscription?.cancel();
-    removeFromFavoritesSubscription = FavoriteSuperheroStorage.getInstance()
+    removeFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance()
         .removeFavorites(id)
         .asStream()
         .listen(
@@ -80,7 +80,7 @@ class SuperheroBloc {
   }
 
   Stream<bool> observeIsFavorite() =>
-      FavoriteSuperheroStorage.getInstance().observeIsFavorite(id);
+      FavoriteSuperheroesStorage.getInstance().observeIsFavorite(id);
 
   void requestSuperhero() {
     requestSubscription?.cancel();

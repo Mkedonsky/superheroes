@@ -4,14 +4,14 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:superheroes/model/superhero.dart';
 
-class FavoriteSuperheroStorage {
+class FavoriteSuperheroesStorage {
   static const _key = "favorite_superheroes";
   final updater = PublishSubject<Null>();
-  static FavoriteSuperheroStorage? _instance;
+  static FavoriteSuperheroesStorage? _instance;
 
-  factory FavoriteSuperheroStorage.getInstance() =>
-      _instance ?? FavoriteSuperheroStorage._internal();
-  FavoriteSuperheroStorage._internal();
+  factory FavoriteSuperheroesStorage.getInstance() =>
+      _instance ?? FavoriteSuperheroesStorage._internal();
+  FavoriteSuperheroesStorage._internal();
 
   Future<bool> addToFavorites(final Superhero superhero) async {
     final rawSuperheroes = await _getRowSuperheroes();
