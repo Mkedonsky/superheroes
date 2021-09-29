@@ -22,18 +22,27 @@ class MainBloc {
 
   MainBloc({this.client}) {
     stateSubject.add(MainPageState.noFavorites);
-    textSubscription = currentTextSubject
-        .distinct()
-        .debounceTime(Duration(milliseconds: 200))
-        .listen((value) {
+    textSubscription =
+        Rx.combineLatest2<String, List<SuperheroInfo>, MainPageStateInfo>(
+                currentTextSubject
+                    .distinct()
+                    .debounceTime(Duration(milliseconds: 500)),
+                favoriteSuperheroesSubject,
+                (searchedText, favorites) =>
+                    MainPageStateInfo(searchedText, favorites.isNotEmpty))
+            .listen((value) {
       print("CHANGED: $value");
       searchSubscription?.cancel();
-      if (value.isEmpty) {
-        stateSubject.add(MainPageState.favorites);
-      } else if (value.length < minSymbols) {
+      if (value.searchedText.isEmpty) {
+        if (value.haveFavorites) {
+          stateSubject.add(MainPageState.favorites);
+        } else {
+          stateSubject.add(MainPageState.noFavorites);
+        }
+      } else if (value.searchedText.length < minSymbols) {
         stateSubject.add(MainPageState.minSymbols);
       } else {
-        searchForSuperheroes(value);
+        searchForSuperheroes(value.searchedText);
       }
     });
   }
@@ -143,6 +152,29 @@ enum MainPageState {
   loadingError,
   searchResult,
   favorites,
+}
+
+class MainPageStateInfo {
+  final String searchedText;
+  final bool haveFavorites;
+
+  const MainPageStateInfo(this.searchedText, this.haveFavorites);
+
+  @override
+  String toString() {
+    return 'MainPageStateInfo{searchText: $searchedText, haveFavorites: $haveFavorites}';
+  }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MainPageStateInfo &&
+          runtimeType == other.runtimeType &&
+          searchedText == other.searchedText &&
+          haveFavorites == other.haveFavorites;
+
+  @override
+  int get hashCode => searchedText.hashCode ^ haveFavorites.hashCode;
 }
 
 class SuperheroInfo {
