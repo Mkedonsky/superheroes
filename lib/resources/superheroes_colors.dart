@@ -8,6 +8,9 @@ class SuperheroesColors{
   static const white = Color(0xFFFFFFFF);
   static const backgroundSuperheroesCard = Color(0xFF2C3243);
   static const backgroundSuperheroesTextField = Color(0xBF2C3243);
+  static const backgroundRemoveSuperheroesField = Color(0xFF961B1B);
+  static const grey = Color(0xFF727272);
+  static const green = Color(0xFF2AAB6A);
 
 
 }

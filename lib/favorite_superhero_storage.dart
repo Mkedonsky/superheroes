@@ -10,7 +10,7 @@ class FavoriteSuperheroesStorage {
   static FavoriteSuperheroesStorage? _instance;
 
   factory FavoriteSuperheroesStorage.getInstance() =>
-      _instance ?? FavoriteSuperheroesStorage._internal();
+      _instance ??= FavoriteSuperheroesStorage._internal();
   FavoriteSuperheroesStorage._internal();
 
   Future<bool> addToFavorites(final Superhero superhero) async {

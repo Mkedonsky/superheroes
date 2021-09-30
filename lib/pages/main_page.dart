@@ -346,48 +346,97 @@ class SuperheroesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<SuperheroInfo>>(
-        stream: stream,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data == null) {
-            return const SizedBox.shrink();
-          }
-          final List<SuperheroInfo> superheroes = snapshot.data!;
-          print("GOT UPDATE SUPERHERO $superheroes");
-          return ListView.separated(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            itemCount: superheroes.length + 1,
-            itemBuilder: (BuildContext context, int index) {
-              if (index == 0) {
-                return Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16, right: 16, top: 90, bottom: 12),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: SuperheroesColors.white,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 24,
-                    ),
-                  ),
-                );
-              }
-              final SuperheroInfo item = superheroes[index - 1];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SuperheroCard(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SuperheroPage(id: item.id),
-                    ));
-                  },
-                  superheroInfo: item,
-                ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(height: 8);
-            },
-          );
-        });
+      stream: stream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const SizedBox.shrink();
+        }
+        final List<SuperheroInfo> superheroes = snapshot.data!;
+        print("GOT UPDATE SUPERHERO $superheroes");
+        return ListView.separated(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          itemCount: superheroes.length + 1,
+          itemBuilder: (BuildContext context, int index) {
+            if (index == 0) {
+              return ListTitleWidget(title: title);
+            }
+            final SuperheroInfo item = superheroes[index - 1];
+            return ListTile(superhero: item);
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(height: 8);
+          },
+        );
+      },
+    );
+  }
+}
+
+class ListTile extends StatelessWidget {
+  final SuperheroInfo superhero;
+
+  const ListTile({
+    Key? key,
+    required this.superhero,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Dismissible(
+        key: ValueKey(superhero.id),
+        child: SuperheroCard(
+          superheroInfo: superhero,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => SuperheroPage(id: superhero.id),
+              ),
+            );
+          },
+        ),
+        background: Container(
+          height: 70,
+          alignment: Alignment.center,
+          decoration:BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: SuperheroesColors.backgroundRemoveSuperheroesField,
+        ),
+
+          child: Text(
+            "Remove from favorites".toUpperCase(),
+            style: TextStyle(
+                fontSize: 12, color: Colors.white, fontWeight: FontWeight.w700),
+          ),
+        ),
+        onDismissed: (_)=>bloc.removeFromFavorites(superhero.id),
+      ),
+    );
+  }
+}
+
+class ListTitleWidget extends StatelessWidget {
+  const ListTitleWidget({
+    Key? key,
+    required this.title,
+  }) : super(key: key);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 90, bottom: 12),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: SuperheroesColors.white,
+          fontWeight: FontWeight.w800,
+          fontSize: 24,
+        ),
+      ),
+    );
   }
 }

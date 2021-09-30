@@ -61,11 +61,11 @@ class SuperheroBloc {
   }
 
   void removeFromFavorites() {
-    final superhero = superheroSubject.valueOrNull;
-    if (superhero == null) {
-      print("Error: superhero = null");
-      return;
-    }
+    // final superhero = superheroSubject.valueOrNull;
+    // if (superhero == null) {
+    //   print("Error: superhero = null");
+    //   return;
+    // }
     removeFromFavoritesSubscription?.cancel();
     removeFromFavoritesSubscription = FavoriteSuperheroesStorage.getInstance()
         .removeFavorites(id)
