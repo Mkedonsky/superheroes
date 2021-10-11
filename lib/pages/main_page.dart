@@ -197,11 +197,13 @@ class MainPageStateWidget extends StatelessWidget {
             return SuperheroesList(
               title: "Search result",
               stream: bloc.observeSearchSuperheroes(),
+              ableToSwipe: false,
             );
           case MainPageState.favorites:
             return SuperheroesList(
               title: "Your favorites",
               stream: bloc.observeFavoritesSuperheroes(),
+              ableToSwipe: true,
             );
           default:
         }
@@ -336,11 +338,13 @@ class LoadingErrorWidget extends StatelessWidget {
 class SuperheroesList extends StatelessWidget {
   final String title;
   final Stream<List<SuperheroInfo>> stream;
+  final bool ableToSwipe;
 
   const SuperheroesList({
     Key? key,
     required this.title,
     required this.stream,
+    required this.ableToSwipe,
   }) : super(key: key);
 
   @override
@@ -361,7 +365,10 @@ class SuperheroesList extends StatelessWidget {
               return ListTitleWidget(title: title);
             }
             final SuperheroInfo item = superheroes[index - 1];
-            return ListTile(superhero: item);
+            return ListTile(
+              superhero: item,
+              ableToSwipe: ableToSwipe,
+            );
           },
           separatorBuilder: (BuildContext context, int index) {
             return const SizedBox(height: 8);
@@ -374,44 +381,61 @@ class SuperheroesList extends StatelessWidget {
 
 class ListTile extends StatelessWidget {
   final SuperheroInfo superhero;
+  final bool ableToSwipe;
 
   const ListTile({
     Key? key,
     required this.superhero,
+    required this.ableToSwipe,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final MainBloc bloc = Provider.of<MainBloc>(context, listen: false);
+    final card = SuperheroCard(
+      superheroInfo: superhero,
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => SuperheroPage(id: superhero.id),
+          ),
+        );
+      },
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Dismissible(
-        key: ValueKey(superhero.id),
-        child: SuperheroCard(
-          superheroInfo: superhero,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => SuperheroPage(id: superhero.id),
-              ),
-            );
-          },
-        ),
-        background: Container(
-          height: 70,
-          alignment: Alignment.center,
-          decoration:BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: SuperheroesColors.backgroundRemoveSuperheroesField,
-        ),
+      child: ableToSwipe
+          ? Dismissible(
+              key: ValueKey(superhero.id),
+              child: card,
+              background: BackgroundCard(isLeft: true),
+              secondaryBackground: BackgroundCard(isLeft: false),
+              onDismissed: (_) => bloc.removeFromFavorites(superhero.id))
+          : card,
+    );
+  }
+}
 
-          child: Text(
-            "Remove from favorites".toUpperCase(),
-            style: TextStyle(
-                fontSize: 12, color: Colors.white, fontWeight: FontWeight.w700),
-          ),
-        ),
-        onDismissed: (_)=>bloc.removeFromFavorites(superhero.id),
+class BackgroundCard extends StatelessWidget {
+  final bool isLeft;
+
+  const BackgroundCard({Key? key, required this.isLeft}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      height: 70,
+      alignment: isLeft ? Alignment.centerLeft : Alignment.centerRight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: SuperheroesColors.backgroundRemoveSuperheroesField,
+      ),
+      child: Text(
+        "Remove\nfrom\nfavorites".toUpperCase(),
+        textAlign: isLeft ? TextAlign.left : TextAlign.right,
+        style: TextStyle(
+            fontSize: 12, color: Colors.white, fontWeight: FontWeight.w700),
       ),
     );
   }

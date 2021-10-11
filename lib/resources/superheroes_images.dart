@@ -4,6 +4,7 @@ class SuperheroesImages{
   static const hulkImage = "assets/images/hulk.png";
   static const supermanImage = "assets/images/superman.png";
   static const unknownImage = "assets/images/unknown.png";
+  static const unknownBig = "assets/images/unknown_big.png";
 
 
 }

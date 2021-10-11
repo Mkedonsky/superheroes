@@ -23,4 +23,5 @@ class AlignmentInfo {
     }
     return null;
   }
+
 }
