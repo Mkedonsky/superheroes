@@ -102,7 +102,7 @@ class SuperheroLoadedWidget extends StatelessWidget {
                   if (superhero.powerstats.isNotNull())
                     PowerstatsWidget(powerstats: superhero.powerstats),
                   BiographyWidget(biography: superhero.biography),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 36),
                 ],
               ),
             ),
@@ -267,7 +267,7 @@ class PowerstatsWidget extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
         Row(
           children: [
             const SizedBox(width: 16),
@@ -298,7 +298,7 @@ class PowerstatsWidget extends StatelessWidget {
             const SizedBox(width: 16),
           ],
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 26),
         Row(
           children: [
             const SizedBox(width: 16),
@@ -329,7 +329,7 @@ class PowerstatsWidget extends StatelessWidget {
             const SizedBox(width: 16),
           ],
         ),
-        const SizedBox(height: 36),
+       const SizedBox(height: 20),
       ],
     );
   }
